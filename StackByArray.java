@@ -1,50 +1,53 @@
-public class StackByLL {
-    private ListNode head;
-    private int size;
-    public StackByLL() {
-        head = null;
-        size = 0;
+public class StackByArray {
+    //Note that the stack size is bounded by a specified capacity
+    private int[] array;
+    private int head;
+    //private int size;
+    public StackByArray(int cap) {
+        array = new int[cap];
+        head = -1;
+        //size = 0;
     }
     public boolean push(int value) {
-        //Assume the linked list will not be full
-        ListNode newNode = new ListNode(value);
-            /*
-            if (isEmpty()) {
-                head = newNode;
-                size++;
-                return true;
-            }
-            */
-        newNode.next = head;
-        head = newNode;
-        size++;
+        if (isFull()) {
+            return false;
+        }
+        head++;
+        array[head] = value;
+        //size++;
         return true;
     }
     public Integer pop() {
         if (isEmpty()) {
             return null;
         }
-        ListNode res = head;
-        head = head.next;
-        res.next = null;    //de-link from the linked list
-        size--;
-        return res.value;
+        int res = array[head];
+        head--;
+        //size--;
+        return res;
+
     }
     public Integer peek() {
         if (isEmpty()) {
-            return null;    //return type as Integer enables null as return value
+            return null;
         }
-        return head.value;  //int will be converted to Integer by auto-boxing
+        return array[head];
     }
-    public int size() {
-        return size;
+    public boolean isFull() {
+        //return size == array.length;
+        return size() == array.length;
     }
     public boolean isEmpty() {
-        return size == 0;
+        //return size == 0;
+        return size() == 0;
+    }
+    public int size() {
+        //return size;
+        return head + 1;
     }
 
     public static void main(String[] args) {
-        StackByLL stack = new StackByLL();
+        StackByArray stack = new StackByArray(2);
         stack.push(10);
         stack.push(20);
         stack.push(30);
@@ -67,5 +70,6 @@ public class StackByLL {
         System.out.println(stack.size());
         System.out.println(stack.peek());
         System.out.println(stack.pop());
+        
     }
 }

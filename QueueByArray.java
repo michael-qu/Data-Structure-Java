@@ -1,22 +1,29 @@
-public class QueueByLL {
-    private ListNode head;
-    private ListNode tail;
+public class QueueByArray {
+    //Note that the queue size is bounded by a specified capacity
+    private int[] array;    //The array is logically cyclic
+    private int head;   //Index of the first meaningful element
+    private int tail;   //Index of the last meaningful element
     private int size;
-    public QueueByLL() {
-        head = null;
-        tail = null;
+    public QueueByArray(int cap) {
+        array = new int[cap];
+        head = 0;
+        tail = 0;
         size = 0;
     }
+
     public boolean offer(int value) {
-        ListNode newNode = new ListNode(value);
+        if (isFull()) {
+            return false;
+        }
         if (isEmpty()) {
-            head = newNode;
-            tail = newNode;
+            array[tail] = value;
+            head = tail;    //For defensive purpose
             size++;
             return true;
         }
-        tail.next = newNode;
-        tail = tail.next;
+        tail++;
+        tail %= array.length;
+        array[tail] = value;
         size++;
         return true;
     }
@@ -25,26 +32,27 @@ public class QueueByLL {
             return null;
         }
         if (size == 1) {
-            Integer resVal = head.value;
-            head = null;
-            tail = null;
             size--;
-            return resVal;
+            return array[head];
         }
-        ListNode res = head;
-        head = head.next;
-        res.next = null;
+        int tmp = array[head];
+        head++;
+        head %= array.length;
         size--;
-        return res.value;
+        return tmp;
     }
     public Integer peek() {
         if (isEmpty()) {
             return null;
         }
-        return head.value;
+        return array[head];
     }
     public int size() {
         return size;
+    }
+
+    public boolean isFull() {
+        return size == array.length;
     }
     public boolean isEmpty() {
         return size == 0;
@@ -52,7 +60,7 @@ public class QueueByLL {
 
     public static void main(String[] args) {
 
-        QueueByLL queue = new QueueByLL();
+        QueueByArray queue = new QueueByArray(2);
         queue.offer(10);
         queue.offer(20);
         queue.offer(30);
@@ -78,5 +86,8 @@ public class QueueByLL {
         System.out.println(queue.size());
         System.out.println(queue.peek());
         System.out.println(queue.poll());
+
     }
+
+
 }
